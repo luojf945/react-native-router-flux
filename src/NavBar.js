@@ -211,6 +211,18 @@ class NavBar extends React.Component {
     this.renderLeftButton = this.renderLeftButton.bind(this);
     this.renderTitle = this.renderTitle.bind(this);
     this.renderImageTitle = this.renderImageTitle.bind(this);
+
+    this.state= {
+      pointerEvents:'auto',
+    };
+  }
+
+  componentWillReceiveProps(nextProps){
+    const {pointerEvents} = nextProps.navigationBarProps;
+    console.info("pointerEvents:"+pointerEvents);
+    if (pointerEvents) {
+      this.setState({pointerEvents:pointerEvents})
+    }
   }
 
   renderBackButton() {
@@ -562,14 +574,15 @@ class NavBar extends React.Component {
       : state.children.map(this.renderTitle, this);
     }
     const contents = (
-      <View>
+    <Animated.View style={[{backgroundColor:'black'},state.navigationBarContentStyle]}>
         {imageOrTitle}
         {renderBackButton(navProps) || renderLeftButton(navProps)}
         {renderRightButton(navProps)}
-      </View>
+      </Animated.View>
     );
     return (
       <Animated.View
+          pointerEvents = {this.state.pointerEvents}
         style={[
           styles.header,
           this.props.navigationBarStyle,
@@ -582,6 +595,7 @@ class NavBar extends React.Component {
             {contents}
           </Image>
         ) : contents}
+          <View style={[styles.header,{height:20,backgroundColor:'black',borderBottomWidth:0}]}></View>
       </Animated.View>
     );
   }
